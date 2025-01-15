@@ -8,7 +8,7 @@ const users = {};
 const socketConfig = (server) => {
     io = socketIo(server, {
         cors: {
-            origin: 'http://localhost:3000',
+            origin: process.env.CLIENT_URL,
             methods: ['GET', 'POST'],
         },
     });
