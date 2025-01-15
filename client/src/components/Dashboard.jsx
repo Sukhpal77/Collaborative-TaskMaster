@@ -21,6 +21,9 @@ function Dashboard() {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [isTaskLoading, setIsTaskLoading] = useState(true);
   const [isUserListLoading, setIsUserListLoading] = useState(true);
+  const [isAddingTask, setIsAddingTask] = useState(false);
+  const [isSharingTask, setIsSharingTask] = useState(false);
+  const [sharingUserId, setSharingUserId] = useState(null);
   const [user, setUser] = useState({
     userId: JSON.parse(localStorage.getItem('userData')).id,
     name: JSON.parse(localStorage.getItem('userData')).name || '',
@@ -111,13 +114,16 @@ function Dashboard() {
 
   const handleAddTask = () => {
     if (!newTask) return;
+    setIsAddingTask(true);
     const newTaskData = { title: newTask, status: 'Pending', owner: user.email };
     axiosInstance.post('/api/tasks', newTaskData).then((response) => {
       setTasks([...tasks, response.data]);
       setNewTask('');
+      setIsAddingTask(false);
       toast.success('Task added successfully!');
     }).catch(() => {
       toast.error('Failed to add task.');
+      setIsAddingTask(false);
     });
   };
 
@@ -160,12 +166,14 @@ function Dashboard() {
   };
 
   const handleShareTask = (taskId) => {
-    setTaskBeingShared(taskId);
+    setTaskBeingShared(taskId); 
     setIsModalOpen(true);
   };
 
   const handleUserSelect = (user) => {
     if (!taskBeingShared) return;
+    setIsSharingTask(true);
+    setSharingUserId(user._id);
     setSelectedUser(user);
     axiosInstance.post('/api/tasks/share-task', { taskId: taskBeingShared, userId: user._id })
       .then(() => {
@@ -177,10 +185,14 @@ function Dashboard() {
           )
         );
         setIsModalOpen(false);
+        setSharingUserId(null);
         socket.emit('shareTask', taskBeingShared, user._id);
         toast.success(`Task shared with ${user.name}!`);
+        setIsSharingTask(false);
+        setSharingUserId(null);
       }).catch(() => {
         toast.error('Failed to share task.');
+        setIsSharingTask(false);
       });
   };
 
@@ -246,10 +258,11 @@ function Dashboard() {
                 className="p-2 border rounded-l-3xl shadow-sm w-full md:w-64 dark:bg-gray-800 dark:text-white"
               />
               <button
-                onClick={handleAddTask}
+                onClick={isAddingTask ? null : handleAddTask}
                 className="px-4 py-2.5 bg-blue-600 text-white rounded-r-3xl shadow-lg"
+                disabled={isAddingTask}
               >
-                Add
+                {isAddingTask ? 'Adding...' : 'Add'}
               </button>
             </div>
           </div>
@@ -268,7 +281,7 @@ function Dashboard() {
                     <div className="flex items-center">
                       <button
                         onClick={() => handleToggleTaskCompletion(task.id)}
-                        className={`p-2 rounded-full ${task.status === 'Completed' ? 'bg-green-500' : 'bg-gray-400'} mr-4`}
+                        className={`p-2 rounded-full ${task.status === 'Completed' ? 'bg-green-500' : 'bg-gray-400'} mr-4 active:p-3`}
                       >
                         <FaCheckCircle color="white" />
                       </button>
@@ -287,7 +300,7 @@ function Dashboard() {
                       </button>
                       <button
                         onClick={() => handleDeleteTask(task.id)}
-                        className="p-2 bg-red-500 text-white rounded-full"
+                        className="p-2 bg-red-500 text-white rounded-full cursor-pointer active:p-3"
                       >
                         <FaTrashAlt />
                       </button>
@@ -325,9 +338,11 @@ function Dashboard() {
                   <p className="text-gray-900 dark:text-white">{user.name}</p>
                   <button
                     onClick={() => handleUserSelect(user)}
-                    className="p-2 bg-blue-500 dark:bg-blue-600 text-white rounded-full hover:bg-blue-600 dark:hover:bg-blue-700"
+                    className={`p-2 rounded-full text-white 
+                  ${sharingUserId === user._id ? 'bg-gray-400' : 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700'}`}
+                    disabled={sharingUserId === user._id}
                   >
-                    Share
+                    {sharingUserId === user._id ? 'Sharing...' : 'Share'}
                   </button>
                 </div>
               ))}

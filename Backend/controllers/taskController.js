@@ -6,7 +6,12 @@ const transporter = require('../utils/emailConfig');
 exports.createTask = async (req, res) => {
   const { title, sharedWith } = req.body;
   try {
-    const task = await Task.create({ title, owner: req.user.id, sharedWith });
+    const dublicateTask = await Task.findOne({ title, owner: req.user._id, sharedWith:req.user._id });
+
+    if (dublicateTask) {
+      return res.status(400).json({ message: 'Task with the same title already exists' });
+    }
+    const task = await Task.create({ title, owner: req.user._id, sharedWith });
     res.status(201).json(task);
   } catch (err) {
     res.status(500).json({ message: 'Failed to create task' });
@@ -20,8 +25,8 @@ exports.getTasks = async (req, res) => {
     const searchCondition = {
       title: { $regex: search, $options: 'i' },
       $or: [
-        { owner: req.user.id },
-        { sharedWith: req.user.id }
+        { owner: req.user._id },
+        { sharedWith: req.user._id }
       ]
     };
 
@@ -72,7 +77,7 @@ exports.updateTask = async (req, res) => {
       {
         _id: id,
         $or: [
-          { owner: req.user.id },
+          { owner: req.user._id },
           { sharedWith: req.user._id }
         ]
       },
