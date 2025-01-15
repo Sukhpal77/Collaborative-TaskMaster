@@ -76,7 +76,6 @@ function Dashboard() {
   }, [user.email]);
 
   useEffect(() => {
-    fetchTasks(page, search);
     setIsUserListLoading(true);
     axiosInstance.get('/api/get-all-users').then((response) => {
       setUserList(response.data);
@@ -85,7 +84,11 @@ function Dashboard() {
       toast.error('Failed to load user list.');
       setIsUserListLoading(false);
     });
-  }, [page, search]);
+  }, []);
+
+  useEffect(() => {
+    fetchTasks(page, search);
+  }, [page, search, handleAddTask]);
 
   const fetchTasks = (page, search) => {
     setIsTaskLoading(true);
