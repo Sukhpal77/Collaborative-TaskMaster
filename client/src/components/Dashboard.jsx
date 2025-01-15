@@ -8,7 +8,9 @@ import { io } from 'socket.io-client';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const socket = io('http://localhost:5000');
+const apiUrl = process.env.REACT_APP_API_URL;
+
+const socket = io(apiUrl);
 
 function Dashboard() {
   const { darkMode, toggleDarkMode } = useTheme();
