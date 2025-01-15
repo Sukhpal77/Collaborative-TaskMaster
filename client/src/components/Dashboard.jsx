@@ -88,7 +88,7 @@ function Dashboard() {
 
   useEffect(() => {
     fetchTasks(page, search);
-  }, [page, search, handleAddTask]);
+  }, [page, search]);
 
   const fetchTasks = (page, search) => {
     setIsTaskLoading(true);
@@ -122,6 +122,7 @@ function Dashboard() {
     axiosInstance.post('/api/tasks', newTaskData).then((response) => {
       setTasks([...tasks, response.data]);
       setNewTask('');
+      fetchTasks(page, search);
       setIsAddingTask(false);
       toast.success('Task added successfully!');
     }).catch(() => {
