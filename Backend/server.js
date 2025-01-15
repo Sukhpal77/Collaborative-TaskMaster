@@ -22,6 +22,9 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/get-all-users', userRoutes);
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Hello from Express on Vercel!' });
+});
 
 
 (async () => {
