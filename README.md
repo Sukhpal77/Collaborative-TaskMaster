@@ -95,18 +95,17 @@ Create a .env file in the frontend directory with the following variables:
 
 - Start the backend server:
 
-        cd backend
-        npm start
+      cd backend
+      npm start
 
 - Start the frontend:
 
-        cd client
-        npm start
+      cd client
+      npm start
 
 5. **Access the application**
 
-Open your browser and navigate to    
-            http://localhost:3000
+Open your browser and navigate to http://localhost:3000
 
 ### Additional Features
 - Search and Filter
@@ -139,4 +138,4 @@ Sukhpal Singh
 
  - Email: sukhpalsingh0333@gmail.com
  - GitHub: https://github.com/Sukhpal77
- - LinkedIn: https://www.[linkedin.com/in/sukhpal-singh](http://www.linkedin.com/in/sukhpalsingh77)
+ - LinkedIn: [https://www.[linkedin.com/in/sukhpal-singh](http://www.linkedin.com/in/sukhpalsingh77)](https://www.linkedin.com/in/sukhpalsingh77/)
