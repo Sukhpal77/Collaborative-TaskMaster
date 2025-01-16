@@ -77,7 +77,7 @@ exports.resetPasswordRequest = async (req, res) => {
 
     const token = crypto.randomBytes(32).toString('hex');
     user.resetToken = token;
-    user.resetTokenExpire = Date.now() + 1 * 60 * 1000;   
+    user.resetTokenExpire = Date.now() + 7 * 60 * 1000;  
     await user.save();
 
     const mailOptions = {
