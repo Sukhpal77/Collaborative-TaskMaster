@@ -136,6 +136,8 @@ exports.shareTask = async (req, res) => {
     const task = await Task.findById(taskId);
     if (!task) return res.status(404).json({ error: 'Task not found' });
 
+    if(task.sharedWith.includes(userToShare._id)) return res.status(400).json({ error: 'Task already shared with this user' });
+
     if (task.owner.equals(req.user._id)) {
       task.sharedWith.push(userToShare._id);
       await task.save();
