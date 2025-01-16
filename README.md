@@ -61,13 +61,13 @@ This project is a Collaborative-TaskMaster Application built using the **MERN st
 
 - For the backend:
 
-    cd backend
-    npm install
+      cd backend
+      npm install
 
 - For the frontend:
 
-    cd client
-    npm install
+      cd client
+      npm install
 
 3. **Set up environment variables**
 
